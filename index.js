@@ -1,27 +1,30 @@
 import { system } from "styled-system";
 
-const stylePropFn = system({
-  fontSize: {
-    property: "fontSize",
-    scale: "fontSizes",
-    transform: (current, scale, { fontSize, theme }) => {
-      if (current.index === 0 || current.index === fontSize.length - 1) {
-        return scale[current.value];
+const stylePropFn = (cssProp, scale, propName) =>
+  system({
+    [propName]: {
+      property: cssProp,
+      scale,
+      transform: (current, scale, props) => {
+        const prop = props[propName];
+
+        if (current.index === 0 || current.index === prop.length - 1) {
+          return scale[current.value];
+        }
+
+        const minProp = current.value;
+        const maxProp = prop[current.index + 1].value;
+
+        const minBreakpoint = prop[current.index - 1].index;
+        const maxBreakpoint = minBreakpoint + 1;
+
+        return lerpCalc(
+          scaledRange(scale, [minProp, maxProp]),
+          scaledRange(props.theme.breakpoints, [minBreakpoint, maxBreakpoint])
+        );
       }
-
-      const minFontSize = current.value;
-      const maxFontSize = fontSize[current.index + 1].value;
-
-      const minBreakpoint = fontSize[current.index - 1].index;
-      const maxBreakpoint = minBreakpoint + 1;
-
-      return lerpCalc(
-        scaledRange(scale, [minFontSize, maxFontSize]),
-        scaledRange(theme.breakpoints, [minBreakpoint, maxBreakpoint])
-      );
     }
-  }
-});
+  });
 
 const lerpCalc = ([minProp, maxProp], [minBreakpoint, maxBreakpoint]) => {
   return `calc(${minProp} +
@@ -59,12 +62,14 @@ const getUnit = measurement => {
   return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
 };
 
-export const fluidFontSize = props => {
-  return stylePropFn({
+const fluid = (cssProp, scale, propName = cssProp) => props => {
+  return stylePropFn(cssProp, scale, propName)({
     ...props,
-    fontSize: props.fontSize.map((value, index) => ({
+    [propName]: props[propName].map((value, index) => ({
       value,
       index
     }))
   });
 };
+
+export default fluid;
