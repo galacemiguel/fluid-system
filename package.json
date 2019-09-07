@@ -1,0 +1,8 @@
+{
+  "name": "fluid-system",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:galacemiguel/fluid-system.git",
+  "author": "Miguel N. Galace <galacemiguel@gmail.com> (https://galacemiguel.com)",
+  "license": "MIT"
+}
