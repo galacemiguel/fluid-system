@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "git@github.com:galacemiguel/fluid-system.git",
   "author": "Miguel N. Galace <galacemiguel@gmail.com> (https://galacemiguel.com)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@styled-system/core": "^5.1.1"
+  }
 }
