@@ -9,18 +9,55 @@ const stylePropFn = system({
         return scale[current.value];
       }
 
-      const breakpoints = theme.breakpoints.map(b => parseInt(b));
-
       const minFontSize = current.value;
       const maxFontSize = fontSize[current.index + 1].value;
 
       const minBreakpoint = fontSize[current.index - 1].index;
       const maxBreakpoint = minBreakpoint + 1;
 
-      return `calc(${scale[minFontSize]}px + (${scale[maxFontSize]} - ${scale[minFontSize]})*(100vw - ${breakpoints[minBreakpoint]}px)/(${breakpoints[maxBreakpoint]} - ${breakpoints[minBreakpoint]}))`;
+      return lerpCalc(
+        scaledRange(scale, [minFontSize, maxFontSize]),
+        scaledRange(theme.breakpoints, [minBreakpoint, maxBreakpoint])
+      );
     }
   }
 });
+
+const lerpCalc = ([minProp, maxProp], [minBreakpoint, maxBreakpoint]) => {
+  return `calc(${minProp} +
+    (${stripUnit(maxProp)} - ${stripUnit(minProp)})*
+    (100vw - ${minBreakpoint})/
+    (${stripUnit(maxBreakpoint)} - ${stripUnit(minBreakpoint)}))`;
+};
+
+const scaledRange = (scale, [min, max]) => {
+  const scaledMin = applyScale(scale, min);
+  const scaledMax = applyScale(scale, max);
+
+  if (getUnit(scaledMin) !== getUnit(scaledMax)) {
+    throw new TypeError(
+      `Cannot interpolate between dissimilar units: '${scaledMin}' and '${scaledMax}'`
+    );
+  }
+
+  return [scaledMin, scaledMax];
+};
+
+const applyScale = (scale, value) => {
+  const measurement = scale[value];
+
+  if (typeof measurement === "number") {
+    return measurement + "px";
+  }
+
+  return measurement;
+};
+
+const stripUnit = measurement => parseInt(measurement);
+
+const getUnit = measurement => {
+  return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
+};
 
 export const fluidFontSize = props => {
   return stylePropFn({
