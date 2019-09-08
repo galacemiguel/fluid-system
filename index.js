@@ -8,15 +8,18 @@ const stylePropFn = (cssProp, scale, propName) =>
       transform: (current, scale, props) => {
         const prop = props[propName];
 
-        if (current.index === 0 || current.index === prop.length - 1) {
+        if (current.index === prop.length - 1) {
           return scale[current.value];
         }
 
         const minProp = current.value;
         const maxProp = prop[current.index + 1].value;
 
-        const minBreakpoint = prop[current.index - 1].index;
-        const maxBreakpoint = minBreakpoint + 1;
+        const minBreakpoint =
+          current.index > 0
+            ? prop[current.index - 1].index
+            : props.theme._fluidSystem.startingWidth;
+        const maxBreakpoint = prop[current.index].index;
 
         return lerpCalc(
           scaledRange(scale, [minProp, maxProp]),
@@ -47,6 +50,10 @@ const scaledRange = (scale, [min, max]) => {
 };
 
 const applyScale = (scale, value) => {
+  if (typeof value === "string") {
+    return value;
+  }
+
   const measurement = scale[value];
 
   if (typeof measurement === "number") {
@@ -63,13 +70,25 @@ const getUnit = measurement => {
 };
 
 const fluid = (cssProp, scale, propName = cssProp) => props => {
-  return stylePropFn(cssProp, scale, propName)({
+  const head = startAnchor(cssProp, scale)(props);
+  const tail = stylePropFn(cssProp, scale, propName)({
     ...props,
     [propName]: props[propName].map((value, index) => ({
       value,
       index
     }))
   });
+
+  return {
+    ...head,
+    ...tail
+  };
 };
+
+const startAnchor = (cssProp, scale) => ({ theme }) => ({
+  [`@media screen and (max-width: ${theme._fluidSystem.startingWidth})`]: {
+    [cssProp]: applyScale(theme[scale], 0)
+  }
+});
 
 export default fluid;
