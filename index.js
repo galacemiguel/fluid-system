@@ -12,14 +12,15 @@ const stylePropFn = (cssProp, scale, propName) =>
           return scale[current.value];
         }
 
-        const minProp = current.value;
-        const maxProp = prop[current.index + 1].value;
+        const minIndex = findMinIndex(current, prop);
+        const maxIndex = findMaxIndex(current, prop);
+
+        const minProp = prop[minIndex].value;
+        const maxProp = prop[maxIndex].value;
 
         const minBreakpoint =
-          current.index > 0
-            ? prop[current.index - 1].index
-            : props.theme._fluidSystem.startingWidth;
-        const maxBreakpoint = prop[current.index].index;
+          minIndex > 0 ? minIndex - 1 : props.theme._fluidSystem.startingWidth;
+        const maxBreakpoint = maxIndex - 1;
 
         return lerpCalc(
           scaledRange(scale, [minProp, maxProp]),
@@ -28,6 +29,22 @@ const stylePropFn = (cssProp, scale, propName) =>
       }
     }
   });
+
+const findMinIndex = (current, prop) => {
+  for (let i = current.index; i >= 0; i--) {
+    if (prop[i].value !== "-") {
+      return i;
+    }
+  }
+};
+
+const findMaxIndex = (current, prop) => {
+  for (let i = current.index + 1; i < prop.length; i++) {
+    if (prop[i].value !== "-") {
+      return i;
+    }
+  }
+};
 
 const lerpCalc = ([minProp, maxProp], [minBreakpoint, maxBreakpoint]) => {
   return `calc(${minProp} +
