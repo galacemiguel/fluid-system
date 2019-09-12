@@ -86,7 +86,8 @@ const getUnit = measurement => {
   return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
 };
 
-const fluid = (cssProp, scale, propName = cssProp) => props => {
+const fluid = (...args) => props => {
+  const { cssProp, scale, propName } = parseArgs(args);
   const head = startAnchor(cssProp, scale)(props);
   const tail = stylePropFn(cssProp, scale, propName)({
     ...props,
@@ -100,6 +101,22 @@ const fluid = (cssProp, scale, propName = cssProp) => props => {
     ...head,
     ...tail
   };
+};
+
+const parseArgs = args => {
+  if (args.length === 1) {
+    return {
+      cssProp: args[0].cssProp,
+      scale: args[0].scale,
+      propName: args[0].propName ? args[0].propName : args[0].cssProp
+    };
+  } else {
+    return {
+      cssProp: args[0],
+      scale: args[1],
+      propName: args[2] ? args[2] : args[0]
+    };
+  }
 };
 
 const startAnchor = (cssProp, scale) => ({ theme }) => ({
