@@ -57,12 +57,6 @@ const scaledRange = (scale, [min, max]) => {
   const scaledMin = applyScale(scale, min);
   const scaledMax = applyScale(scale, max);
 
-  if (getUnit(scaledMin) !== getUnit(scaledMax)) {
-    throw new TypeError(
-      `Cannot interpolate between dissimilar units: '${scaledMin}' and '${scaledMax}'`
-    );
-  }
-
   return [scaledMin, scaledMax];
 };
 
@@ -83,11 +77,22 @@ const applyScale = (scale, value) => {
 const stripUnit = measurement => parseInt(measurement);
 
 const getUnit = measurement => {
+  if (typeof measurement === "number") {
+    return "px";
+  }
+
   return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
 };
 
 const fluid = (...args) => props => {
   const { cssProp, scale, propName } = parseArgs(args);
+
+  checkIfHaveSameUnit(
+    props[propName].map(value => applyScale(props.theme[scale], value)),
+    props.theme[scale],
+    props.theme.breakpoints
+  );
+
   const head = startAnchor(cssProp, scale)(props);
   const tail = stylePropFn(cssProp, scale, propName)({
     ...props,
@@ -117,6 +122,18 @@ const parseArgs = args => {
       propName: args[2] ? args[2] : args[0]
     };
   }
+};
+
+const checkIfHaveSameUnit = (...args) => {
+  args.forEach(arg => {
+    const argUnits = arg.map(getUnit);
+
+    if (new Set(argUnits).size > 1) {
+      throw new TypeError(
+        `Cannot interpolate between dissimilar units in scale: [${arg}]`
+      );
+    }
+  });
 };
 
 const startAnchor = (cssProp, scale) => ({ theme }) => ({
