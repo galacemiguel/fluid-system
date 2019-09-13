@@ -84,9 +84,7 @@ const getUnit = measurement => {
   return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
 };
 
-const fluid = (...args) => props => {
-  const { cssProp, scale, propName } = parseArgs(args);
-
+const fluid = ({ cssProp, scale, propName }) => props => {
   checkIfHaveSameUnit(
     props[propName].map(value => applyScale(props.theme[scale], value)),
     props.theme[scale],
@@ -108,22 +106,6 @@ const fluid = (...args) => props => {
   };
 };
 
-const parseArgs = args => {
-  if (args.length === 1) {
-    return {
-      cssProp: args[0].cssProp,
-      scale: args[0].scale,
-      propName: args[0].propName ? args[0].propName : args[0].cssProp
-    };
-  } else {
-    return {
-      cssProp: args[0],
-      scale: args[1],
-      propName: args[2] ? args[2] : args[0]
-    };
-  }
-};
-
 const checkIfHaveSameUnit = (...args) => {
   args.forEach(arg => {
     const argUnits = arg.map(getUnit);
@@ -142,4 +124,26 @@ const startAnchor = (cssProp, scale) => ({ theme }) => ({
   }
 });
 
-export default fluid;
+const pipe = (...fns) => (...args) =>
+  fns.reduce((fnArgs, fn) => fn(fnArgs), args);
+
+const parseArgs = args => {
+  if (args.length === 1) {
+    return {
+      cssProp: args[0].cssProp,
+      scale: args[0].scale,
+      propName: args[0].propName ? args[0].propName : args[0].cssProp
+    };
+  } else {
+    return {
+      cssProp: args[0],
+      scale: args[1],
+      propName: args[2] ? args[2] : args[0]
+    };
+  }
+};
+
+export default pipe(
+  parseArgs,
+  fluid
+);
