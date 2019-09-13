@@ -106,6 +106,18 @@ const startAnchor = (cssProp, scale) => ({ theme }) => ({
   }
 });
 
+const checkIfStartingWidthDefined = arg => {
+  const theme = arg.props.theme;
+
+  if (!("startingWidth" in theme._fluidSystem)) {
+    throw new ReferenceError(
+      `"_fluidSystem.startingWidth is not defined in the theme object"`
+    );
+  }
+
+  return arg;
+};
+
 const checkIfHaveSameUnit = arg => {
   const { scale, propName, props } = arg;
   const scales = [
@@ -131,6 +143,7 @@ const _pipe = (f, g) => (...args) => g(f(...args));
 const pipe = (...fns) => fns.reduce(_pipe);
 
 const fluidWithChecks = pipe(
+  checkIfStartingWidthDefined,
   checkIfHaveSameUnit,
   fluid
 );
