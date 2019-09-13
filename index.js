@@ -84,7 +84,7 @@ const getUnit = measurement => {
   return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
 };
 
-const fluid = ({ cssProp, scale, propName, props }) => {
+const styleFn = ({ cssProp, scale, propName, props }) => {
   const head = startAnchor(cssProp, scale)(props);
   const tail = stylePropFn(cssProp, scale, propName)({
     ...props,
@@ -142,10 +142,10 @@ const checkIfHaveSameUnit = arg => {
 const _pipe = (f, g) => (...args) => g(f(...args));
 const pipe = (...fns) => fns.reduce(_pipe);
 
-const fluidWithChecks = pipe(
+const styleFnWithChecks = pipe(
   checkIfStartingWidthDefined,
   checkIfHaveSameUnit,
-  fluid
+  styleFn
 );
 
 const parseArgs = (...args) => {
@@ -167,7 +167,7 @@ const parseArgs = (...args) => {
 export default pipe(
   parseArgs,
   ({ cssProp, scale, propName }) => props =>
-    fluidWithChecks({
+    styleFnWithChecks({
       cssProp,
       scale,
       propName,
