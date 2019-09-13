@@ -84,13 +84,7 @@ const getUnit = measurement => {
   return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
 };
 
-const fluid = ({ cssProp, scale, propName }) => props => {
-  checkIfHaveSameUnit(
-    props[propName].map(value => applyScale(props.theme[scale], value)),
-    props.theme[scale],
-    props.theme.breakpoints
-  );
-
+const fluid = ({ cssProp, scale, propName, props }) => {
   const head = startAnchor(cssProp, scale)(props);
   const tail = stylePropFn(cssProp, scale, propName)({
     ...props,
@@ -106,28 +100,42 @@ const fluid = ({ cssProp, scale, propName }) => props => {
   };
 };
 
-const checkIfHaveSameUnit = (...args) => {
-  args.forEach(arg => {
-    const argUnits = arg.map(getUnit);
-
-    if (new Set(argUnits).size > 1) {
-      throw new TypeError(
-        `Cannot interpolate between dissimilar units in scale: [${arg}]`
-      );
-    }
-  });
-};
-
 const startAnchor = (cssProp, scale) => ({ theme }) => ({
   [`@media screen and (max-width: ${theme._fluidSystem.startingWidth})`]: {
     [cssProp]: applyScale(theme[scale], 0)
   }
 });
 
-const pipe = (...fns) => (...args) =>
-  fns.reduce((fnArgs, fn) => fn(fnArgs), args);
+const checkIfHaveSameUnit = arg => {
+  const { scale, propName, props } = arg;
+  const scales = [
+    props[propName].map(value => applyScale(props.theme[scale], value)),
+    props.theme[scale],
+    [props.theme._fluidSystem.startingWidth, ...props.theme.breakpoints]
+  ];
 
-const parseArgs = args => {
+  scales.forEach(scale => {
+    const scaleUnits = scale.map(getUnit);
+
+    if (new Set(scaleUnits).size > 1) {
+      throw new TypeError(
+        `Cannot interpolate between dissimilar units in scale: [${scale}]`
+      );
+    }
+  });
+
+  return arg;
+};
+
+const _pipe = (f, g) => (...args) => g(f(...args));
+const pipe = (...fns) => fns.reduce(_pipe);
+
+const fluidWithChecks = pipe(
+  checkIfHaveSameUnit,
+  fluid
+);
+
+const parseArgs = (...args) => {
   if (args.length === 1) {
     return {
       cssProp: args[0].cssProp,
@@ -145,5 +153,11 @@ const parseArgs = args => {
 
 export default pipe(
   parseArgs,
-  fluid
+  ({ cssProp, scale, propName }) => props =>
+    fluidWithChecks({
+      cssProp,
+      scale,
+      propName,
+      props
+    })
 );
