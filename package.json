@@ -1,10 +1,14 @@
 {
   "name": "fluid-system",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": "git@github.com:galacemiguel/fluid-system.git",
   "author": "Miguel N. Galace <galacemiguel@gmail.com> (https://galacemiguel.com)",
   "license": "MIT",
+  "scripts": {
+    "build": "babel src --out-dir lib",
+    "prepublish": "yarn build"
+  },
   "dependencies": {
     "@styled-system/core": "^5.1.1"
   },
