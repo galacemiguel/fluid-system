@@ -139,12 +139,23 @@ const checkIfHaveSameUnit = arg => {
   return arg;
 };
 
+const processStartingWidth = arg => {
+  const { props } = arg;
+
+  if (typeof props.theme._fluidSystem.startingWidth === "number") {
+    props.theme._fluidSystem.startingWidth += "px";
+  }
+
+  return arg;
+};
+
 const _pipe = (f, g) => (...args) => g(f(...args));
 const pipe = (...fns) => fns.reduce(_pipe);
 
 const styleFnWithChecks = pipe(
   checkIfStartingWidthDefined,
   checkIfHaveSameUnit,
+  processStartingWidth,
   styleFn
 );
 
