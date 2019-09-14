@@ -65,7 +65,7 @@ const applyScale = (scale, value) => {
     return value;
   }
 
-  const measurement = scale[value];
+  const measurement = value < scale.length ? scale[value] : value;
 
   if (typeof measurement === "number") {
     return measurement + "px";
