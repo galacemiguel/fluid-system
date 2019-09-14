@@ -40,17 +40,22 @@ Convinced? Add Fluid System to your project's list of dependencies.
 yarn add fluid-system
 ```
 
-Make sure your `breakpoints` and the scales you wish to use in your design are defined in your [theme object](https://github.com/system-ui/theme-specification).
+Make sure your `breakpoints` and the scales you wish to use in your design are defined in your [theme object](https://github.com/system-ui/theme-specification). And specific to Fluid System, define a `_fluidSystem` key at the top-level, pointing to an object with a `startingWidth` property.
+
+This will define the viewport width at which your styles will begin to become fluid. Below that, they will remain fixed at their respective sizes for that breakpoint.
 
 ```javascript
 // theme.js
 export default {
   breakpoints: [768, 1024],
-  fontSizes: [13, 16, 19, 23, 27, 33, 39, 47]
+  fontSizes: [13, 16, 19, 23, 27, 33, 39, 47],
+  _fluidSystem: {
+    startingWidth: 320
+  }
 };
 ```
 
-And make them available to your component tree via a `ThemeProvider`.
+Now, make them available to your component tree via a `ThemeProvider`.
 
 ```javascript
 import React from "react";
