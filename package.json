@@ -1,5 +1,6 @@
 {
   "name": "fluid-system",
+  "description": "Fluid System is a style props function creator for transforming the static values of ordinal scales into fluid measurements that smoothly transition across breakpoints.",
   "version": "0.1.0",
   "main": "lib/index.js",
   "repository": "git@github.com:galacemiguel/fluid-system.git",
@@ -9,6 +10,15 @@
     "build": "babel src --out-dir lib",
     "prepublish": "yarn build"
   },
+  "keywords": [
+    "fluid",
+    "design system",
+    "typography",
+    "system ui",
+    "styled-system",
+    "styled-components",
+    "emotion"
+  ],
   "dependencies": {
     "@styled-system/core": "^5.1.1"
   },
