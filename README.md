@@ -72,8 +72,9 @@ export default App;
 Then, like you would any other Styled System function, call `fluid` as an argument to the component you wish to make fluid.
 
 ```javascript
-import fluid from "fluid-system";
+import React from "react";
 import styled from "styled-components";
+import fluid from "fluid-system";
 
 const Text = styled("p")(
   fluid({
