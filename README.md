@@ -86,7 +86,7 @@ const Text = styled("p")(
 const FluidText = () => <Text fontSize={[1, 2, 3]} />;
 ```
 
-`<Text>` will now fluidly transition from `fontSize` 1, 2, then 3—defined in your theme's `fontSizes`—between your `breakpoints`.
+`<Text>` will now fluidly transition from `fontSize` 1, 2, then 3—defined in your theme's `fontSizes`—between your `startingWidth` and `breakpoints`.
 
 Just take note that each value in your scale will all need to resolve to the same unit, otherwise Fluid System will throw an error.
 
