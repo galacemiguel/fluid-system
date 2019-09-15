@@ -124,5 +124,5 @@ fluid(cssProperty: string, scale: string, propName: string?) => styleFn
 
 ## Prior Art 🌊
 
-- [Responsive And Fluid Typography With vh And vw Units - Smashing Magazine](https://www.smashingmagazine.com/2016/05/fluid-typography/)
-- [Fluid Responsive Typography With CSS Poly Fluid Sizing - Smashing Magazine](https://www.smashingmagazine.com/2017/05/fluid-responsive-typography-css-poly-fluid-sizing/)
+- [Responsive And Fluid Typography With vh And vw Units](https://www.smashingmagazine.com/2016/05/fluid-typography/)
+- [Fluid Responsive Typography With CSS Poly Fluid Sizing](https://www.smashingmagazine.com/2017/05/fluid-responsive-typography-css-poly-fluid-sizing/)
