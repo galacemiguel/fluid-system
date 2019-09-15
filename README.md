@@ -62,7 +62,7 @@ import React from "react";
 import { ThemeProvider } from "styled-components";
 import theme from "./theme";
 
-const App = props => (
+const App = () => (
   <ThemeProvider theme={theme}>{/* Your component tree */}</ThemeProvider>
 );
 
