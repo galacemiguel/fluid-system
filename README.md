@@ -1,5 +1,5 @@
 # 💧 Fluid System
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![npm](https://img.shields.io/npm/v/fluid-system?label=npm) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Fluid System is a style props function creator for transforming the static values of ordinal scales into fluid measurements that smoothly transition across breakpoints.
 
