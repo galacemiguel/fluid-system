@@ -1,187 +1,285 @@
-import { system } from "styled-system";
+import {
+  buildMediaQuery,
+  isMeasurement,
+  pipe,
+  stripUnit,
+  getUnit
+} from "./utils";
 
-const stylePropFn = (cssProp, scale, propName) =>
-  system({
-    [propName]: {
+const main = ([stylePropFn, props]) => {
+  const styleObject = stylePropFn(props);
+  const allInterpolatableValues = parseInterpolatableValues(styleObject);
+  const allTransitionGroups = buildTransitionGroups(allInterpolatableValues, [
+    props.theme.breakpoints.fluidStart,
+    ...props.theme.breakpoints
+  ]);
+
+  const fluidStyleObject = buildFluidStyleObject(allTransitionGroups, [
+    props.theme.breakpoints.fluidStart,
+    ...props.theme.breakpoints
+  ]);
+  const mergedStyleObject = mergeResponsiveStyles(
+    styleObject,
+    fluidStyleObject
+  );
+
+  return mergedStyleObject;
+};
+
+const parseInterpolatableValues = styleObject => {
+  const interpolatableCssProps = Object.entries(styleObject)
+    .filter(
+      ([cssProp, cssValue]) =>
+        !cssProp.startsWith("@media") && isMeasurement(cssValue)
+    )
+    .map(([cssProp]) => cssProp);
+  const mediaQueries = Object.keys(styleObject).filter(cssProp =>
+    cssProp.startsWith("@media")
+  );
+
+  const allInterpolatableValues = interpolatableCssProps.map(cssProp => {
+    const mediaQueryValues = mediaQueries.map(
+      mediaQuery => styleObject[mediaQuery][cssProp]
+    );
+    const valuesWithUnits = [styleObject[cssProp], ...mediaQueryValues].map(
+      value => (typeof value === "number" ? value + "px" : value)
+    );
+
+    return {
       property: cssProp,
-      scale,
-      transform: (current, scale, props) => {
-        const prop = props[propName];
+      values: valuesWithUnits
+    };
+  });
 
-        if (current.index === prop.length - 1) {
-          return scale[current.value];
+  return allInterpolatableValues;
+};
+
+const buildTransitionGroups = (allInterpolatableValues, breakpoints) =>
+  allInterpolatableValues.reduce(
+    (allTransitionGroups, interpolatableValues) => {
+      // Use the delete operator to allow us to skip over undefined
+      // values in a loop while still preserving the original order
+      interpolatableValues.values.forEach((interpolatableValue, i) => {
+        if (!interpolatableValue) {
+          delete interpolatableValues.values[i];
+        }
+      });
+
+      let transitionGroup = [];
+      let actualCount = 0;
+
+      interpolatableValues.values.forEach((interpolatableValue, i) => {
+        transitionGroup.push({
+          values: [interpolatableValue],
+          breakpoints: [breakpoints[i]]
+        });
+
+        if (actualCount > 0) {
+          transitionGroup[actualCount - 1].values.push(interpolatableValue);
+          transitionGroup[actualCount - 1].breakpoints.push(breakpoints[i]);
         }
 
-        const minIndex = findMinIndex(current, prop);
-        const maxIndex = findMaxIndex(current, prop);
+        actualCount++;
+      });
 
-        const minProp = prop[minIndex].value;
-        const maxProp = prop[maxIndex].value;
+      return {
+        ...allTransitionGroups,
+        [interpolatableValues.property]: transitionGroup.slice(
+          0,
+          transitionGroup.length - 1
+        )
+      };
+    },
+    {}
+  );
 
-        const minBreakpoint =
-          minIndex > 0 ? minIndex - 1 : props.theme._fluidSystem.startingWidth;
-        const maxBreakpoint = maxIndex - 1;
+const buildFluidStyleObject = (allTransitionGroups, breakpoints) => {
+  const fluidStyles = Object.entries(allTransitionGroups).map(
+    ([property, transitionGroups]) =>
+      buildFluidStyle(property, transitionGroups)
+  );
+  const mediaQueries = breakpoints.map(breakpoint =>
+    buildMediaQuery(breakpoint)
+  );
 
-        return lerpCalc(
-          scaledRange(scale, [minProp, maxProp]),
-          scaledRange(props.theme.breakpoints, [minBreakpoint, maxBreakpoint])
-        );
+  const fluidStyleObject = mediaQueries.reduce(
+    (fluidStyleObject, mediaQuery) => ({
+      ...fluidStyleObject,
+      [mediaQuery]: fluidStyles
+        .map(fluidStyle => fluidStyle[mediaQuery])
+        .reduce(
+          (breakpointStyles, fluidStyle) => ({
+            ...breakpointStyles,
+            ...fluidStyle
+          }),
+          {}
+        )
+    }),
+    {}
+  );
+
+  return fluidStyleObject;
+};
+
+const buildFluidStyle = (property, transitionGroups) =>
+  transitionGroups.reduce(
+    (
+      fluidStyle,
+      {
+        values: [minProp, maxProp],
+        breakpoints: [minBreakpoint, maxBreakpoint]
+      },
+      i
+    ) => ({
+      ...fluidStyle,
+      [buildMediaQuery(minBreakpoint)]: {
+        [property]: buildLerpCalc(
+          [minProp, maxProp],
+          [minBreakpoint, maxBreakpoint]
+        )
       }
-    }
-  });
+    }),
+    {}
+  );
 
-const findMinIndex = (current, prop) => {
-  for (let i = current.index; i >= 0; i--) {
-    if (prop[i].value !== "-") {
-      return i;
-    }
+const buildLerpCalc = ([minProp, maxProp], [minBreakpoint, maxBreakpoint]) =>
+  `calc(${minProp} + (${stripUnit(maxProp)} - ${stripUnit(
+    minProp
+  )})*(100vw - ${minBreakpoint})/(${stripUnit(maxBreakpoint)} - ${stripUnit(
+    minBreakpoint
+  )}))`;
+
+const mergeResponsiveStyles = (styleObject, fluidStyleObject) => {
+  const baseStyles = Object.keys(styleObject)
+    .filter(style => !style.startsWith("@media"))
+    .reduce(
+      (baseStyles, style) => ({
+        ...baseStyles,
+        [style]: styleObject[style]
+      }),
+      {}
+    );
+  const mediaQueries = [
+    ...Object.keys(styleObject),
+    ...Object.keys(fluidStyleObject)
+  ]
+    .filter(key => key.startsWith("@media"))
+    .filter((mediaQuery, i, self) => self.indexOf(mediaQuery) === i);
+  const sortedMediaQueries = mediaQueries.sort(
+    (a, b) =>
+      parseInt(a.match(/@media screen and \(min-width: (.*)\)/)[1]) -
+      parseInt(b.match(/@media screen and \(min-width: (.*)\)/)[1])
+  );
+
+  const mergedStyleObject = sortedMediaQueries.reduce(
+    (mergedStyleObject, mediaQuery) => {
+      const mergedBreakpointStyles = {
+        ...styleObject[mediaQuery],
+        ...fluidStyleObject[mediaQuery]
+      };
+
+      if (!Object.entries(mergedBreakpointStyles).length) {
+        return mergedStyleObject;
+      }
+
+      return {
+        ...mergedStyleObject,
+        [mediaQuery]: mergedBreakpointStyles
+      };
+    },
+    { ...baseStyles }
+  );
+
+  return mergedStyleObject;
+};
+
+const fluid = stylePropFn =>
+  pipe(
+    props => [stylePropFn, props],
+    setDefaultBreakpoints,
+    convertBreakpointsObject,
+    checkBreakpointUnits,
+    setDefaultFluidStart,
+    checkFluidStartUnit,
+    main
+  );
+
+const setDefaultBreakpoints = ([stylePropFn, props]) => {
+  if (!props.theme.breakpoints) {
+    props.theme.breakpoints = ["40em", "52em", "64em"];
   }
+
+  return [stylePropFn, props];
 };
 
-const findMaxIndex = (current, prop) => {
-  for (let i = current.index + 1; i < prop.length; i++) {
-    if (prop[i].value !== "-") {
-      return i;
-    }
-  }
-};
+const convertBreakpointsObject = ([stylePropFn, props]) => {
+  const breakpoints = props.theme.breakpoints;
 
-const lerpCalc = ([minProp, maxProp], [minBreakpoint, maxBreakpoint]) => {
-  return `calc(${minProp} +
-    (${stripUnit(maxProp)} - ${stripUnit(minProp)})*
-    (100vw - ${minBreakpoint})/
-    (${stripUnit(maxBreakpoint)} - ${stripUnit(minBreakpoint)}))`;
-};
+  if (breakpoints.constructor === Object) {
+    const breakpointsArray = Object.entries(breakpoints)
+      .filter(([key]) => key !== "fluidStart")
+      .map(([_, value]) => value)
+      .sort((a, b) => stripUnit(a) - stripUnit(b));
+    const fluidStart = breakpoints.fluidStart;
 
-const scaledRange = (scale, [min, max]) => {
-  const scaledMin = applyScale(scale, min);
-  const scaledMax = applyScale(scale, max);
-
-  return [scaledMin, scaledMax];
-};
-
-const applyScale = (scale, value) => {
-  if (typeof value === "string") {
-    return value;
+    props.theme.breakpoints = breakpointsArray;
+    props.theme.breakpoints.fluidStart = fluidStart;
   }
 
-  const measurement = value < scale.length ? scale[value] : value;
-
-  if (typeof measurement === "number") {
-    return measurement + "px";
-  }
-
-  return measurement;
+  return [stylePropFn, props];
 };
 
-const stripUnit = measurement => parseInt(measurement);
+const checkBreakpointUnits = ([stylePropFn, props]) => {
+  const breakpoints = props.theme.breakpoints;
+  const breakpointUnits = breakpoints.map(getUnit);
 
-const getUnit = measurement => {
-  if (typeof measurement === "number") {
-    return "px";
-  }
-
-  return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
-};
-
-const styleFn = ({ cssProp, scale, propName, props }) => {
-  const head = startAnchor(cssProp, scale)(props);
-  const tail = stylePropFn(cssProp, scale, propName)({
-    ...props,
-    [propName]: props[propName].map((value, index) => ({
-      value,
-      index
-    }))
-  });
-
-  return {
-    ...head,
-    ...tail
-  };
-};
-
-const startAnchor = (cssProp, scale) => ({ theme }) => ({
-  [`@media screen and (max-width: ${theme._fluidSystem.startingWidth})`]: {
-    [cssProp]: applyScale(theme[scale], 0)
-  }
-});
-
-const checkIfStartingWidthDefined = arg => {
-  const theme = arg.props.theme;
-
-  if (!("startingWidth" in theme._fluidSystem)) {
-    throw new ReferenceError(
-      `"_fluidSystem.startingWidth is not defined in the theme object"`
+  if (new Set(breakpointUnits).size > 1) {
+    throw new TypeError(
+      `Cannot interpolate between dissimilar units in the theme breakpoints: [${breakpoints
+        .map(breakpoint => `"${breakpoint}"`)
+        .join(", ")}]`
     );
   }
 
-  return arg;
+  return [stylePropFn, props];
 };
 
-const checkIfHaveSameUnit = arg => {
-  const { scale, propName, props } = arg;
-  const scales = [
-    props[propName].map(value => applyScale(props.theme[scale], value)),
-    props.theme[scale],
-    [props.theme._fluidSystem.startingWidth, ...props.theme.breakpoints]
-  ];
+const setDefaultFluidStart = ([stylePropFn, props]) => {
+  if (!props.theme.breakpoints.fluidStart) {
+    const breakpointUnit = getUnit(props.theme.breakpoints[0]);
 
-  scales.forEach(scale => {
-    const scaleUnits = scale.map(getUnit);
-
-    if (new Set(scaleUnits).size > 1) {
-      throw new TypeError(
-        `Cannot interpolate between dissimilar units in scale: [${scale}]`
-      );
+    switch (breakpointUnit) {
+      case "em":
+        props.theme.breakpoints.fluidStart = "20em";
+        break;
+      case "rem":
+        props.theme.breakpoints.fluidStart = "20rem";
+        break;
+      case "px":
+        props.theme.breakpoints.fluidStart = "320px";
+        break;
+      default:
+        throw new TypeError(
+          `Cannot define a default fluid starting width for "${breakpointUnit}" unit breakpoints; manually set the alias on the theme object instead`
+        );
     }
-  });
-
-  return arg;
-};
-
-const processStartingWidth = arg => {
-  const { props } = arg;
-
-  if (typeof props.theme._fluidSystem.startingWidth === "number") {
-    props.theme._fluidSystem.startingWidth += "px";
   }
 
-  return arg;
+  return [stylePropFn, props];
 };
 
-const _pipe = (f, g) => (...args) => g(f(...args));
-const pipe = (...fns) => fns.reduce(_pipe);
+const checkFluidStartUnit = ([stylePropFn, props]) => {
+  const fluidStartUnit = getUnit(props.theme.breakpoints.fluidStart);
+  const breakpointUnit = props.theme.breakpoints.length
+    ? getUnit(props.theme.breakpoints[0])
+    : null;
 
-const styleFnWithChecks = pipe(
-  checkIfStartingWidthDefined,
-  checkIfHaveSameUnit,
-  processStartingWidth,
-  styleFn
-);
+  if (breakpointUnit && fluidStartUnit !== breakpointUnit)
+    throw new TypeError(
+      `"The fluid starting width must be defined in the same unit as the theme breakpoints"`
+    );
 
-const parseArgs = (...args) => {
-  if (args.length === 1) {
-    return {
-      cssProp: args[0].cssProp,
-      scale: args[0].scale,
-      propName: args[0].propName ? args[0].propName : args[0].cssProp
-    };
-  } else {
-    return {
-      cssProp: args[0],
-      scale: args[1],
-      propName: args[2] ? args[2] : args[0]
-    };
-  }
+  return [stylePropFn, props];
 };
 
-export default pipe(
-  parseArgs,
-  ({ cssProp, scale, propName }) => props =>
-    styleFnWithChecks({
-      cssProp,
-      scale,
-      propName,
-      props
-    })
-);
+export default fluid;
