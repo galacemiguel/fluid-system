@@ -25,6 +25,7 @@
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
     "@styled-system/typography": "^5.1.2",
+    "eslint": "^6.5.1",
     "jest": "^24.9.0"
   }
 }
