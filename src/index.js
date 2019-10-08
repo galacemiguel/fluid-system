@@ -128,8 +128,7 @@ const buildFluidStyle = (property, transitionGroups) =>
       {
         values: [minProp, maxProp],
         breakpoints: [minBreakpoint, maxBreakpoint]
-      },
-      i
+      }
     ) => ({
       ...fluidStyle,
       [buildMediaQuery(minBreakpoint)]: {
@@ -218,7 +217,7 @@ const convertBreakpointsObject = ([stylePropFn, props]) => {
   if (breakpoints.constructor === Object) {
     const breakpointsArray = Object.entries(breakpoints)
       .filter(([key]) => key !== "fluidStart")
-      .map(([_, value]) => value)
+      .map(([, value]) => value)
       .sort((a, b) => stripUnit(a) - stripUnit(b));
     const fluidStart = breakpoints.fluidStart;
 
