@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "build": "babel src --out-dir lib",
-    "prepublish": "yarn build"
+    "prepublish": "yarn build",
+    "test": "jest"
   },
   "keywords": [
     "fluid",
@@ -22,6 +23,8 @@
   "devDependencies": {
     "@babel/cli": "^7.6.0",
     "@babel/core": "^7.6.0",
-    "@babel/preset-env": "^7.6.0"
+    "@babel/preset-env": "^7.6.0",
+    "@styled-system/typography": "^5.1.2",
+    "jest": "^24.9.0"
   }
 }
