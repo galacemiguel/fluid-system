@@ -262,4 +262,12 @@ describe("preflight checks", () => {
       ).toThrow(TypeError);
     });
   });
+
+  test("throws an error if fluidStart is defined in a different unit than breakpoints", () => {
+    expect(() =>
+      fluid(typography)({
+        theme: themeFactory({ breakpoints: { 0: "40em", fluidStart: "320px" } })
+      })
+    ).toThrow(TypeError);
+  });
 });
