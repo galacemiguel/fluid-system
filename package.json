@@ -7,9 +7,9 @@
   "author": "Miguel N. Galace <galacemiguel@gmail.com> (https://galacemiguel.com)",
   "license": "MIT",
   "scripts": {
+    "test": "jest",
     "build": "babel src --out-dir lib",
-    "prepublish": "yarn build",
-    "test": "jest"
+    "prepublish": "yarn test && yarn build"
   },
   "keywords": [
     "fluid",
