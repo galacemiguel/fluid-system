@@ -1,3 +1,3 @@
-const presets = [["@babel/preset-env"]];
+const presets = [["@babel/preset-env"], ["minify"]];
 
 module.exports = { presets };
