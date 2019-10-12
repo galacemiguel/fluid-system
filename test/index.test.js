@@ -44,15 +44,15 @@ describe("main", () => {
             fluidStart: "20em"
           }
         }),
-        fontSize: ["16px", "21px"]
+        fontSize: ["1em", "1.33em"]
       })
     ).toEqual({
-      fontSize: "16px",
+      fontSize: "1em",
       [buildMediaQuery("20em")]: {
-        fontSize: "calc(16px + (21 - 16)*(100vw - 20em)/(40 - 20))"
+        fontSize: "calc(1em + (1.33 - 1)*(100vw - 20em)/(40 - 20))"
       },
       [buildMediaQuery("40em")]: {
-        fontSize: "21px"
+        fontSize: "1.33em"
       }
     });
   });
@@ -79,28 +79,6 @@ describe("main", () => {
     });
   });
 
-  test("generates fluid styles for % units", () => {
-    expect(
-      fluid(typography)({
-        theme: themeFactory({
-          breakpoints: {
-            0: "40em",
-            fluidStart: "20em"
-          }
-        }),
-        lineHeight: ["100%", "150%"]
-      })
-    ).toEqual({
-      lineHeight: "100%",
-      [buildMediaQuery("20em")]: {
-        lineHeight: "calc(100% + (150 - 100)*(100vw - 20em)/(40 - 20))"
-      },
-      [buildMediaQuery("40em")]: {
-        lineHeight: "150%"
-      }
-    });
-  });
-
   test("generates fluid styles and preserves other styles", () => {
     expect(
       fluid(typography)({
@@ -110,19 +88,19 @@ describe("main", () => {
             fluidStart: "20em"
           }
         }),
-        fontSize: ["16px", "21px"],
+        fontSize: ["1em", "1.33em"],
         fontFamily: "sans-serif",
         textAlign: ["left", "center"]
       })
     ).toEqual({
-      fontSize: "16px",
+      fontSize: "1em",
       fontFamily: "sans-serif",
       textAlign: "left",
       [buildMediaQuery("20em")]: {
-        fontSize: "calc(16px + (21 - 16)*(100vw - 20em)/(40 - 20))"
+        fontSize: "calc(1em + (1.33 - 1)*(100vw - 20em)/(40 - 20))"
       },
       [buildMediaQuery("40em")]: {
-        fontSize: "21px",
+        fontSize: "1.33em",
         textAlign: "center"
       }
     });
@@ -144,10 +122,26 @@ describe("main", () => {
     });
   });
 
+  test("skips generating fluid styles for responsive styles in a different unit than the breakpoints", () => {
+    expect(
+      fluid(typography)({
+        theme: themeFactory({
+          breakpoints: ["40em"]
+        }),
+        fontSize: ["16px", "21px"]
+      })
+    ).toEqual({
+      fontSize: "16px",
+      [buildMediaQuery("40em")]: {
+        fontSize: "21px"
+      }
+    });
+  });
+
   test("accepts a custom fluidStart", () => {
     const styleObject = fluid(typography)({
       theme: themeFactory({ breakpoints: { 0: "40em", fluidStart: "27em" } }),
-      fontSize: [16, 21]
+      fontSize: ["1em", "1.33em"]
     });
     const firstMediaQuery = Object.keys(styleObject).find(key =>
       key.startsWith("@media")
@@ -166,15 +160,15 @@ describe("main", () => {
             fluidStart: "20em"
           }
         }),
-        fontSize: ["16px", null, "21px"]
+        fontSize: ["1em", null, "1.33em"]
       })
     ).toEqual({
-      fontSize: "16px",
+      fontSize: "1em",
       [buildMediaQuery("20em")]: {
-        fontSize: "calc(16px + (21 - 16)*(100vw - 20em)/(52 - 20))"
+        fontSize: "calc(1em + (1.33 - 1)*(100vw - 20em)/(52 - 20))"
       },
       [buildMediaQuery("52em")]: {
-        fontSize: "21px"
+        fontSize: "1.33em"
       }
     });
   });
@@ -184,7 +178,7 @@ describe("preflight checks", () => {
   test("sets default breakpoints when none are given", () => {
     const styleObject = fluid(typography)({
       theme: themeFactory({ breakpoints: undefined }),
-      fontSize: [16, 21]
+      fontSize: ["1em", "1.33em"]
     });
     const hasMediaQuery = Object.keys(styleObject).some(key =>
       key.startsWith("@media")
@@ -196,7 +190,7 @@ describe("preflight checks", () => {
   test("handles object breakpoints", () => {
     const styleObject = fluid(typography)({
       theme: themeFactory({ breakpoints: { sm: "40em", fluidStart: "20em" } }),
-      fontSize: [16, 21]
+      fontSize: ["1em", "1.33em"]
     });
     const hasFluidStartMediaQuery = Object.keys(styleObject).some(
       key => key.startsWith("@media") && key.includes("20em")
@@ -220,7 +214,7 @@ describe("preflight checks", () => {
     test('sets an "em" unit fluidStart for "em" unit breakpoints', () => {
       const styleObject = fluid(typography)({
         theme: themeFactory({ breakpoints: ["40em"] }),
-        fontSize: [16, 21]
+        fontSize: ["1em", "1.33em"]
       });
       const fluidStartMediaQuery = Object.keys(styleObject).find(
         key => key.startsWith("@media") && !key.includes("40em")
@@ -232,7 +226,7 @@ describe("preflight checks", () => {
     test('sets a "rem" unit fluidStart for "rem" unit breakpoints', () => {
       const styleObject = fluid(typography)({
         theme: themeFactory({ breakpoints: ["40rem"] }),
-        fontSize: [16, 21]
+        fontSize: ["1rem", "1.33rem"]
       });
       const fluidStartMediaQuery = Object.keys(styleObject).find(
         key => key.startsWith("@media") && !key.includes("40rem")
@@ -244,7 +238,7 @@ describe("preflight checks", () => {
     test('sets a "px" unit fluidStart for "px" unit breakpoints', () => {
       const styleObject = fluid(typography)({
         theme: themeFactory({ breakpoints: ["640px"] }),
-        fontSize: [16, 21]
+        fontSize: ["16px", "21px"]
       });
       const fluidStartMediaQuery = Object.keys(styleObject).find(
         key => key.startsWith("@media") && !key.includes("640px")
@@ -257,7 +251,7 @@ describe("preflight checks", () => {
       expect(() =>
         fluid(typography)({
           theme: themeFactory({ breakpoints: ["640pt"] }),
-          fontSize: [16, 21]
+          fontSize: ["1em", "1.33em"]
         })
       ).toThrow(TypeError);
     });
