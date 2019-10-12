@@ -1,6 +1,6 @@
 {
   "name": "fluid-system",
-  "description": "Fluid System is a style props function creator for transforming the static values of ordinal scales into fluid measurements that smoothly transition across breakpoints.",
+  "description": "Fluid System is a style props function transformer for turning the static values of ordinal scales into fluid measurements that smoothly transition across breakpoints.",
   "version": "1.0.0",
   "main": "lib/index.js",
   "repository": "git@github.com:galacemiguel/fluid-system.git",
