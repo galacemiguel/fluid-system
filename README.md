@@ -47,11 +47,11 @@ Make sure your `breakpoints` and the scales you wish to use in your design are d
 ```javascript
 // theme.js
 const theme = {
-  breakpoints: ["40em", "52em", "64em"],
+  breakpoints: ["768px", "1024px"],
   fontSizes: [13, 16, 19, 23, 27, 33, 39, 47]
 };
 
-theme.breakpoints.fluidStart = "20em";
+theme.breakpoints.fluidStart = "320px";
 
 export default theme;
 ```
@@ -94,10 +94,10 @@ const FluidText = () => <Text fontSize={[1, 2, 3]} />;
 `FluidText`'s `fontSize` will now fluidly scale between `16px`, `19px`, and `23px` in line with your theme's `breakpoints`.
 
 
-|                     | < `20em`* |   ≥ `20em`* |    ≥ `40em` | ≥ `52em` |
-| ------------------- | --------: | ----------: | ----------: | -------: |
-| `typography`        |    `16px` |      `16px` |      `19px` |   `23px` |
-| `fluid(typography)` |    `16px` | `16`–`19px` | `19`–`23px` |   `23px` |
+|                     | < `320px`* |  ≥ `320px`* |   ≥ `768px` | ≥ `1024px` |
+| ------------------- | ---------: | ----------: | ----------: | ---------: |
+| `typography`        |     `16px` |      `16px` |      `19px` |     `23px` |
+| `fluid(typography)` |     `16px` | `16`–`19px` | `19`–`23px` |     `23px` |
 
 \* `theme.breakpoints.fluidStart`
 
@@ -113,10 +113,10 @@ Fluid System follows the Styled System syntax for skipping breakpoints. For flui
 <Text fontSize={[1, null, 2]} />
 ```
 
-|                     | < `20em`* |   ≥ `20em`* | ≥ `40em` | ≥ `52em` |
-| ------------------- | --------: | ----------: | -------: | -------: |
-| `typography`        |    `16px` |      `16px` |          |   `19px` |
-| `fluid(typography)` |    `16px` | `16`–`19px` |          |   `19px` |
+|                     | < `320px`* |  ≥ `320px`* | ≥ `768px` | ≥ `1024px` |
+| ------------------- | ---------: | ----------: | --------: | ---------: |
+| `typography`        |     `16px` |      `16px` |           |     `19px` |
+| `fluid(typography)` |     `16px` | `16`–`19px` |           |     `19px` |
 
 \* `theme.breakpoints.fluidStart`
 
