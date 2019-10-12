@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 - 2019/10/13
+
+- Exclude generating of fluid styles for styles that do not meet the same-unit requirements
+- Added integration test for same-unit requirements
+- New README section on same-unit requirements
+
 ## 1.0.0 - 2019/10/12
 
 ### Changes
