@@ -8,7 +8,10 @@ import {
 
 const main = ([stylePropFn, props]) => {
   const styleObject = stylePropFn(props);
-  const allInterpolatableValues = parseInterpolatableValues(styleObject);
+  const allInterpolatableValues = parseInterpolatableValues(
+    getUnit(props.theme.breakpoints[0]),
+    styleObject
+  );
   const allTransitionGroups = buildTransitionGroups(allInterpolatableValues, [
     props.theme.breakpoints.fluidStart,
     ...props.theme.breakpoints
@@ -26,7 +29,7 @@ const main = ([stylePropFn, props]) => {
   return mergedStyleObject;
 };
 
-const parseInterpolatableValues = styleObject => {
+const parseInterpolatableValues = (breakpointUnit, styleObject) => {
   const responsiveCssProps = Object.entries(styleObject)
     .filter(
       ([cssProp, cssValue]) =>
@@ -56,8 +59,10 @@ const parseInterpolatableValues = styleObject => {
       const responsiveValuesUnits = responsiveValues.values
         .map(getUnit)
         .filter(Boolean);
+      const singleUnit = new Set(responsiveValuesUnits).size === 1;
+      const sameAsBreakpointUnit = responsiveValuesUnits[0] === breakpointUnit;
 
-      return new Set(responsiveValuesUnits).size == 1;
+      return singleUnit && sameAsBreakpointUnit;
     }
   );
 
