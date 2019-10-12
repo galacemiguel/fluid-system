@@ -101,9 +101,13 @@ const FluidText = () => <Text fontSize={[1, 2, 3]} />;
 
 \* `theme.breakpoints.fluidStart`
 
-> Note though that each value in your responsive styles array will all need to resolve to the same unit, otherwise Fluid System will not be able to create fluid styles for them.
-
 That's it! Even if you began a Styled System project without Fluid System in mind, it can be very easily integrated at almost no cost. No part of the code where your components are being used needs changing!
+
+## Requirements ☔️
+
+Because of the way linear interpolation calculations work, all measurements at play—your theme's `breakpoints`, and all the sizes you wish to transition between—will all need to be defined in the same units.
+
+For example, if your `breakpoints` are defined in `px`, you will need to use `px` measurements in your styles for Fluid System to work its magic. Styles defined in different units will not have fluid styles generated.
 
 ## Interpolating Across Breakpoints 🚣‍♀️
 
