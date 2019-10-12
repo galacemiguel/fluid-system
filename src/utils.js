@@ -6,6 +6,10 @@ export const isMeasurement = measurement => {
 };
 
 export const getUnit = measurement => {
+  if (!measurement) {
+    return null;
+  }
+
   if (typeof measurement === "number") {
     return "px";
   }

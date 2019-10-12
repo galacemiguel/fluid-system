@@ -27,7 +27,7 @@ const main = ([stylePropFn, props]) => {
 };
 
 const parseInterpolatableValues = styleObject => {
-  const interpolatableCssProps = Object.entries(styleObject)
+  const responsiveCssProps = Object.entries(styleObject)
     .filter(
       ([cssProp, cssValue]) =>
         !cssProp.startsWith("@media") && isMeasurement(cssValue)
@@ -37,7 +37,7 @@ const parseInterpolatableValues = styleObject => {
     cssProp.startsWith("@media")
   );
 
-  const allInterpolatableValues = interpolatableCssProps.map(cssProp => {
+  const allResponsiveValues = responsiveCssProps.map(cssProp => {
     const mediaQueryValues = mediaQueries.map(
       mediaQuery => styleObject[mediaQuery][cssProp]
     );
@@ -50,6 +50,16 @@ const parseInterpolatableValues = styleObject => {
       values: valuesWithUnits
     };
   });
+
+  const allInterpolatableValues = allResponsiveValues.filter(
+    responsiveValues => {
+      const responsiveValuesUnits = responsiveValues.values
+        .map(getUnit)
+        .filter(Boolean);
+
+      return new Set(responsiveValuesUnits).size == 1;
+    }
+  );
 
   return allInterpolatableValues;
 };

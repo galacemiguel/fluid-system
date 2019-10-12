@@ -128,6 +128,22 @@ describe("main", () => {
     });
   });
 
+  test("skips generating fluid styles for responsive styles defined in different units", () => {
+    expect(
+      fluid(typography)({
+        theme: themeFactory({
+          breakpoints: ["40em"]
+        }),
+        fontSize: ["1em", "21px"]
+      })
+    ).toEqual({
+      fontSize: "1em",
+      [buildMediaQuery("40em")]: {
+        fontSize: "21px"
+      }
+    });
+  });
+
   test("accepts a custom fluidStart", () => {
     const styleObject = fluid(typography)({
       theme: themeFactory({ breakpoints: { 0: "40em", fluidStart: "27em" } }),
