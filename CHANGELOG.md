@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.3 - 2019/10/16
+- Removed non-production files from package tarball
+
 ## 1.0.2 - 2019/10/16
 - Update phrasing in some sections of the README
 
