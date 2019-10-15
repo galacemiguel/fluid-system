@@ -10,8 +10,8 @@
     "test": "jest",
     "bundle": "rollup src/index.js --file lib/index.js --format umd --name 'fluidSystem'",
     "transpile": "babel lib/index.js -o lib/index.js",
-    "build": "yarn bundle && yarn transpile",
-    "prepublish": "yarn test && yarn build"
+    "package": "yarn bundle && yarn transpile",
+    "prepublish": "yarn test && yarn package"
   },
   "keywords": [
     "fluid",
