@@ -1,1 +1,7 @@
+.eslintrc.json
+.travis.yml
+babel.config.js
+coverage
+sandbox
 src
+test
