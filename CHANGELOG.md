@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.2 - 2019/10/16
+- Update phrasing in some sections of the README
+
 ## 1.0.1 - 2019/10/13
 
 - Exclude generating of fluid styles for styles that do not meet the same-unit requirements
