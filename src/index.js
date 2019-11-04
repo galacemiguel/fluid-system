@@ -79,37 +79,31 @@ const parseInterpolatableValues = (breakpointUnit, styleObject) => {
 const buildTransitionGroups = (allInterpolatableValues, breakpoints) =>
   allInterpolatableValues.reduce(
     (allTransitionGroups, interpolatableValues) => {
-      // Use the delete operator to allow us to skip over undefined
-      // values in a loop while still preserving the original order
-      interpolatableValues.values.forEach((interpolatableValue, i) => {
-        if (!interpolatableValue) {
-          delete interpolatableValues.values[i];
-        }
-      });
+      const interpolatableIndices = interpolatableValues.values
+        .map((value, i) => (value !== undefined ? i : null))
+        .filter(Number.isInteger);
 
       let transitionGroup = [];
-      let actualCount = 0;
 
-      interpolatableValues.values.forEach((interpolatableValue, i) => {
+      for (let i = 0; i < interpolatableIndices.length - 1; i++) {
+        const interpolatableIndex = interpolatableIndices[i];
+        const nextInterpolatableIndex = interpolatableIndices[i + 1];
+
         transitionGroup.push({
-          values: [interpolatableValue],
-          breakpoints: [breakpoints[i]]
+          values: [
+            interpolatableValues.values[interpolatableIndex],
+            interpolatableValues.values[nextInterpolatableIndex]
+          ],
+          breakpoints: [
+            breakpoints[interpolatableIndex],
+            breakpoints[nextInterpolatableIndex]
+          ]
         });
-
-        if (actualCount > 0) {
-          transitionGroup[actualCount - 1].values.push(interpolatableValue);
-          transitionGroup[actualCount - 1].breakpoints.push(breakpoints[i]);
-        }
-
-        actualCount++;
-      });
+      }
 
       return {
         ...allTransitionGroups,
-        [interpolatableValues.property]: transitionGroup.slice(
-          0,
-          transitionGroup.length - 1
-        )
+        [interpolatableValues.property]: transitionGroup
       };
     },
     {}
