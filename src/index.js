@@ -182,8 +182,8 @@ const mergeResponsiveStyles = (styleObject, fluidStyleObject) => {
     .filter((mediaQuery, i, self) => self.indexOf(mediaQuery) === i);
   const sortedMediaQueries = mediaQueries.sort(
     (a, b) =>
-      parseInt(a.match(/@media screen and \(min-width: (.*)\)/)[1]) -
-      parseInt(b.match(/@media screen and \(min-width: (.*)\)/)[1])
+      parseFloat(a.match(/@media screen and \(min-width: (.*)\)/)[1]) -
+      parseFloat(b.match(/@media screen and \(min-width: (.*)\)/)[1])
   );
 
   const mergedStyleObject = sortedMediaQueries.reduce(
