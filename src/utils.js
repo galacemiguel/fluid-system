@@ -14,7 +14,7 @@ export const getUnit = measurement => {
     return "px";
   }
 
-  return measurement.match(/(?<=[0-9])[^0-9]+$/)[0];
+  return measurement.match(/^([+-]?(?:\d+|\d*\.\d+))([A-Za-z]*|%)$/)[2];
 };
 
 export const stripUnit = measurement => parseFloat(measurement);
