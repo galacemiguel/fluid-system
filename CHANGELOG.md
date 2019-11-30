@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 - 2019/11/30
+
+- Replace lookbehind regex for better cross-browser support ([#3](https://github.com/galacemiguel/fluid-system/issues/3))
+
 ## 1.0.3 - 2019/10/16
 - Removed non-production files from package tarball
 
