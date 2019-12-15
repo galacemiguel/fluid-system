@@ -61,7 +61,7 @@ This will define the viewport width at which your styles will begin to become fl
 
 Then, make sure your theme is available to your component tree via a `ThemeProvider`, otherwise Styled System will not be able to pick up on your theme values.
 
-```javascript
+```jsx
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import theme from "./theme";
@@ -79,7 +79,7 @@ Now, in your base components, wrap the Styled System functions (or your custom s
 
 `fluid` transforms style prop functions to make all the responsive styles they have defined in CSS lengths fluid.
 
-```javascript
+```jsx
 import React from "react";
 import styled from "styled-components";
 import { typography } from "styled-system";
@@ -115,7 +115,7 @@ For example, if your `breakpoints` are defined in `px`, you will need to use `px
 
 Fluid System follows the Styled System syntax for skipping breakpoints. For fluid styles, it can also be used to interpolate styles _across_ breakpoints. Just set `null` between two values in your array and Fluid System will skip over defining a new size at that breakpoint and instead smoothly scale between the endpoints as if the middle breakpoint had not been defined.
 
-```javascript
+```jsx
 <Text fontSize={[1, null, 2]} />
 ```
 
@@ -134,7 +134,7 @@ Fluid System works just the same with Rebass! Just note that you may need to ins
 npm install @styled-system/typography
 ```
 
-```javascript
+```jsx
 import styled from "@emotion/styled";
 import { Text } from "rebass";
 import typography from "@styled-system/typography";
