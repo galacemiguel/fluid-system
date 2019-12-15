@@ -1,4 +1,5 @@
 # 💧 Fluid System
+
 [![Build Status](https://travis-ci.com/galacemiguel/fluid-system.svg?branch=master)](https://travis-ci.com/galacemiguel/fluid-system) ![Codecov](https://img.shields.io/codecov/c/github/galacemiguel/fluid-system) ![npm](https://img.shields.io/npm/v/fluid-system?label=npm) ![GitHub](https://img.shields.io/github/license/galacemiguel/fluid-system?color=00c2ff)
 
 Fluid System is a style props function transformer for generating fluid styles.
@@ -11,10 +12,10 @@ It is designed to be used with libraries built upon [the System UI specification
 
 There is a greater need now, more than ever, for websites to adapt their designs to the plethora of devices existing in the market today. And to do so, most websites might follow a type size specification like below:
 
-|              |   Phone |  Tablet |   Desktop |
-| ------------ | ------: | ------: | --------: |
-| Screen width | ≥ 320px | ≥ 768px | ≥  1024px |
-| Font size    |    16px |    19px |      23px |
+|              |   Phone |  Tablet |  Desktop |
+| ------------ | ------: | ------: | -------: |
+| Screen width | ≥ 320px | ≥ 768px | ≥ 1024px |
+| Font size    |    16px |    19px |     23px |
 
 The approach to implementing this with _responsive_ design has been to create a breakpoint at each point of transition. But such an approach alienates a likely majority of your users whose screen sizes do not align exactly with those sweet spots.
 
@@ -97,11 +98,10 @@ const MyComponent = () => (
 
 `Text` in `MyComponent` will now fluidly scale between `16px`, `19px`, and `23px` in line with your theme's defined `fontSizes` and `breakpoints`.
 
-
-|                     | < `320px`* |  ≥ `320px`* |   ≥ `768px` | ≥ `1024px` |
-| ------------------- | ---------: | ----------: | ----------: | ---------: |
-| `typography`        |     `16px` |      `16px` |      `19px` |     `23px` |
-| `fluid(typography)` |     `16px` | `16`–`19px` | `19`–`23px` |     `23px` |
+|                     | < `320px`\* | ≥ `320px`\* |   ≥ `768px` | ≥ `1024px` |
+| ------------------- | ----------: | ----------: | ----------: | ---------: |
+| `typography`        |      `16px` |      `16px` |      `19px` |     `23px` |
+| `fluid(typography)` |      `16px` | `16`–`19px` | `19`–`23px` |     `23px` |
 
 \* `theme.breakpoints.fluidStart`
 
@@ -119,10 +119,10 @@ Fluid System follows the Styled System syntax for skipping breakpoints. For flui
 <Text fontSize={[1, null, 2]} />
 ```
 
-|                     | < `320px`* |  ≥ `320px`* | ≥ `768px` | ≥ `1024px` |
-| ------------------- | ---------: | ----------: | --------: | ---------: |
-| `typography`        |     `16px` |      `16px` |           |     `19px` |
-| `fluid(typography)` |     `16px` | `16`–`19px` |           |     `19px` |
+|                     | < `320px`\* | ≥ `320px`\* | ≥ `768px` | ≥ `1024px` |
+| ------------------- | ----------: | ----------: | --------: | ---------: |
+| `typography`        |      `16px` |      `16px` |           |     `19px` |
+| `fluid(typography)` |      `16px` | `16`–`19px` |           |     `19px` |
 
 \* `theme.breakpoints.fluidStart`
 
