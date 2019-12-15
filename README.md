@@ -84,14 +84,18 @@ import styled from "styled-components";
 import { typography } from "styled-system";
 import fluid from "fluid-system";
 
-const Text = styled("p")(
+const FluidText = styled("p")(
   fluid(typography)
 );
 
-const FluidText = () => <Text fontSize={[1, 2, 3]} />;
+const MyComponent = () => (
+  <Text fontSize={[1, 2, 3]}>
+    Hello, world! I'm fluid!
+  </Text>
+);
 ```
 
-`FluidText`'s `fontSize` will now fluidly scale between `16px`, `19px`, and `23px` in line with your theme's defined `fontSizes` and `breakpoints`.
+`Text` in `MyComponent` will now fluidly scale between `16px`, `19px`, and `23px` in line with your theme's defined `fontSizes` and `breakpoints`.
 
 
 |                     | < `320px`* |  ≥ `320px`* |   ≥ `768px` | ≥ `1024px` |
