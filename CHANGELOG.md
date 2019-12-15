@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.7 - 2019/12/15
+
+- Miscellaneous README fixes
+- Fix npm–repository link
+
 ## 1.0.5 - 2019/11/30
 
 - Replace lookbehind regex for better cross-browser support ([#3](https://github.com/galacemiguel/fluid-system/issues/3))
