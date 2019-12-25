@@ -14,7 +14,8 @@ export const getUnit = measurement => {
     return "px";
   }
 
-  return measurement.match(/^([+-]?(?:\d+|\d*\.\d+))([A-Za-z]*|%)$/)[2];
+  const matchedMeasurement = measurement.match(/^([+-]?(?:\d+|\d*\.\d+))([a-z]*|%)$/);
+  return matchedMeasurement ? matchedMeasurement[2] : null;
 };
 
 export const stripUnit = measurement => parseFloat(measurement);
