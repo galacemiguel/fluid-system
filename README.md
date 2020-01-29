@@ -90,9 +90,9 @@ const FluidText = styled("p")(
 );
 
 const MyComponent = () => (
-  <Text fontSize={[1, 2, 3]}>
+  <FluidText fontSize={[1, 2, 3]}>
     Hello, world! I'm fluid!
-  </Text>
+  </FluidText>
 );
 ```
 
