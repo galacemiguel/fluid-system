@@ -52,6 +52,14 @@ const theme = {
 
 theme.breakpoints.fluidStart = "320px";
 
+/* You can also define theme.breakpoints as an object.
+theme.breakpoints = {
+  fluidStart: '320px',
+  0: '768px',
+  1: '1024px'
+};
+*/
+
 export default theme;
 ```
 
