@@ -14,20 +14,26 @@ import {
 } from "./utils";
 
 const main = ([stylePropFn, props]) => {
+  const { breakpoints } = props.theme;
+
   const styleObject = stylePropFn(props);
   const allInterpolatableValues = parseInterpolatableValues(
-    getUnit(props.theme.breakpoints[0]),
+    getUnit(breakpoints[0]),
     styleObject
   );
-  const allTransitionGroups = buildTransitionGroups(allInterpolatableValues, [
-    props.theme.breakpoints.fluidStart,
-    ...props.theme.breakpoints
-  ]);
+  const fluidBreakpoints = [breakpoints.fluidStart, ...breakpoints].sort(
+    (a, b) => stripUnit(a) - stripUnit(b)
+  );
+  fluidBreakpoints.fluidStart = breakpoints.fluidStart;
 
-  const fluidStyleObject = buildFluidStyleObject(allTransitionGroups, [
-    props.theme.breakpoints.fluidStart,
-    ...props.theme.breakpoints
-  ]);
+  const allTransitionGroups = buildTransitionGroups(
+    allInterpolatableValues,
+    fluidBreakpoints
+  );
+  const fluidStyleObject = buildFluidStyleObject(
+    allTransitionGroups,
+    fluidBreakpoints
+  );
   const mergedStyleObject = mergeResponsiveStyles(
     styleObject,
     fluidStyleObject
@@ -79,13 +85,20 @@ const parseInterpolatableValues = (breakpointUnit, styleObject) => {
 const buildTransitionGroups = (allInterpolatableValues, breakpoints) =>
   allInterpolatableValues.reduce(
     (allTransitionGroups, interpolatableValues) => {
+      const interpolatableIndicesStart = breakpoints.findIndex(
+        breakpoint => breakpoint === breakpoints.fluidStart
+      );
       const interpolatableIndices = interpolatableValues.values
         .map((value, i) => (value !== undefined ? i : null))
         .filter(Number.isInteger);
 
       let transitionGroup = [];
 
-      for (let i = 0; i < interpolatableIndices.length - 1; i++) {
+      for (
+        let i = interpolatableIndicesStart;
+        i < interpolatableIndices.length - 1;
+        i++
+      ) {
         const interpolatableIndex = interpolatableIndices[i];
         const nextInterpolatableIndex = interpolatableIndices[i + 1];
 
