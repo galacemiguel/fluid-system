@@ -172,6 +172,63 @@ describe("main", () => {
       }
     });
   });
+
+  test("generates correct styles when fluidStart is not the least value in theme.breakpoints", () => {
+    expect(
+      fluid(typography)({
+        theme: themeFactory({
+          breakpoints: {
+            0: "20em",
+            1: "30em",
+            2: "40em",
+            fluidStart: "25em"
+          }
+        }),
+        fontSize: ["1em", "1.33em", "1.77em", "2.17em"]
+      })
+    ).toEqual({
+      fontSize: "1em",
+      [buildMediaQuery("20em")]: {
+        fontSize: "1.33em"
+      },
+      [buildMediaQuery("25em")]: {
+        fontSize: "calc(1.33em + (1.77 - 1.33)*(100vw - 25em)/(30 - 25))"
+      },
+      [buildMediaQuery("30em")]: {
+        fontSize: "calc(1.77em + (2.17 - 1.77)*(100vw - 30em)/(40 - 30))"
+      },
+      [buildMediaQuery("40em")]: {
+        fontSize: "2.17em"
+      }
+    });
+  });
+
+  test("generates correct styles when fluidStart matches a value in theme.breakpoints", () => {
+    expect(
+      fluid(typography)({
+        theme: themeFactory({
+          breakpoints: {
+            0: "20em",
+            1: "30em",
+            2: "40em",
+            fluidStart: "30em"
+          }
+        }),
+        fontSize: ["1em", "1.33em", "1.77em", "2.17em"]
+      })
+    ).toEqual({
+      fontSize: "1em",
+      [buildMediaQuery("20em")]: {
+        fontSize: "1.33em"
+      },
+      [buildMediaQuery("30em")]: {
+        fontSize: "calc(1.77em + (2.17 - 1.77)*(100vw - 30em)/(40 - 30))"
+      },
+      [buildMediaQuery("40em")]: {
+        fontSize: "2.17em"
+      }
+    });
+  });
 });
 
 describe("preflight checks", () => {
