@@ -1,6 +1,6 @@
 # 💧 Fluid System
 
-[![Build Status](https://travis-ci.com/galacemiguel/fluid-system.svg?branch=master)](https://travis-ci.com/galacemiguel/fluid-system) ![Codecov](https://img.shields.io/codecov/c/github/galacemiguel/fluid-system) ![npm](https://img.shields.io/npm/v/fluid-system?label=npm) ![GitHub](https://img.shields.io/github/license/galacemiguel/fluid-system?color=00c2ff)
+[![Build Status](https://travis-ci.com/galacemiguel/fluid-system.svg?branch=master)](https://travis-ci.com/galacemiguel/fluid-system) ![Codecov](https://img.shields.io/codecov/c/github/galacemiguel/fluid-system) ![npm](https://img.shields.io/npm/v/fluid-system?label=npm) ![Downloads](https://img.shields.io/npm/dt/fluid-system) ![GitHub](https://img.shields.io/github/license/galacemiguel/fluid-system?color=00c2ff)
 
 Fluid System is a style props function transformer for generating fluid styles.
 
@@ -75,9 +75,7 @@ import { ThemeProvider } from "styled-components";
 import theme from "./theme";
 
 const App = () => (
-  <ThemeProvider theme={theme}>
-    {/* Your component tree */}
-  </ThemeProvider>
+  <ThemeProvider theme={theme}>{/* Your component tree */}</ThemeProvider>
 );
 
 export default App;
@@ -93,14 +91,10 @@ import styled from "styled-components";
 import { typography } from "styled-system";
 import fluid from "fluid-system";
 
-const FluidText = styled("p")(
-  fluid(typography)
-);
+const FluidText = styled("p")(fluid(typography));
 
 const MyComponent = () => (
-  <FluidText fontSize={[1, 2, 3]}>
-    Hello, world! I'm fluid!
-  </FluidText>
+  <FluidText fontSize={[1, 2, 3]}>Hello, world! I'm fluid!</FluidText>
 );
 ```
 
@@ -148,9 +142,7 @@ import { Text } from "rebass";
 import typography from "@styled-system/typography";
 import fluid from "fluid-system";
 
-const FluidText = styled(Text)(
-  fluid(typography)
-);
+const FluidText = styled(Text)(fluid(typography));
 ```
 
 ## Prior Art 🌊
