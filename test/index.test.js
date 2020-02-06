@@ -1,3 +1,4 @@
+import space from "@styled-system/space";
 import typography from "@styled-system/typography";
 
 import fluid from "../src";
@@ -31,6 +32,22 @@ describe("main", () => {
       textAlign: "left",
       [buildMediaQuery("40em")]: {
         textAlign: "center"
+      }
+    });
+  });
+
+  test("preserves styles with shorthand declarations", () => {
+    expect(
+      fluid(space)({
+        theme: themeFactory({
+          breakpoints: ["40em"]
+        }),
+        margin: ["1em 2em", "2em 4em"]
+      })
+    ).toEqual({
+      margin: "1em 2em",
+      [buildMediaQuery("40em")]: {
+        margin: "2em 4em"
       }
     });
   });
