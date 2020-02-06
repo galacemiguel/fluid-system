@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.8 - 2020/02/06
+
+- Fixed errors with shorthand style declarations ([#8](https://github.com/galacemiguel/fluid-system/issues/8))
+- Fixed errors with irregular fluidStart values ([#6](https://github.com/galacemiguel/fluid-system/issues/6))
+- Fixed error in README code example
+- Added comment to README code example describing object breakpoints support
+
 ## 1.0.7 - 2019/12/15
 
 - Miscellaneous README fixes
