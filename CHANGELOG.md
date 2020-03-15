@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.9 - 2020/03/15
+
+- Update dependencies
+
 ## 1.0.8 - 2020/02/06
 
 - Fixed errors with shorthand style declarations ([#8](https://github.com/galacemiguel/fluid-system/issues/8))
