@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.10 - 2020/09/12
+
+- Update dependencies
+
 ## 1.0.9 - 2020/03/15
 
 - Update dependencies
