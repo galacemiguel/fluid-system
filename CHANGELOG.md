@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.11 - 2021/03/20
+
+- Upgrade vulnerable dependencies
+
 ## 1.0.10 - 2020/09/12
 
 - Update dependencies
