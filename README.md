@@ -98,7 +98,7 @@ const MyComponent = () => (
 );
 ```
 
-`Text` in `MyComponent` will now fluidly scale between `16px`, `19px`, and `23px` in line with your theme's defined `fontSizes` and `breakpoints`.
+`FluidText` in `MyComponent` will now fluidly scale between `16px`, `19px`, and `23px` in line with your theme's defined `fontSizes` and `breakpoints`.
 
 |                     | < `320px`\* | ≥ `320px`\* |   ≥ `768px` | ≥ `1024px` |
 | ------------------- | ----------: | ----------: | ----------: | ---------: |
