@@ -1,6 +1,10 @@
 {
-  "hooks": { "before:init": "yarn test" },
+  "hooks": {
+    "before:init": "yarn test",
+    "after:bump": "yarn auto-changelog --starting-date 2021-08-23 --package --commit-limit false --template changelog-template.hbs"
+  },
   "git": {
+    "changelog": null,
     "addUntrackedFiles": true,
     "commit": true,
     "tag": true,

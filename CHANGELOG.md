@@ -1,5 +1,7 @@
 # Changelog
 
+<!-- auto-changelog-above -->
+
 ## 1.0.12 - 2021/05/23
 
 - Upgrade vulnerable dependencies

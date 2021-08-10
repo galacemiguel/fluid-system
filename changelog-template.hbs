@@ -1,0 +1,14 @@
+# Changelog
+
+{{#each releases}}
+  {{#if href}}
+    ## [{{title}}]({{href}}) - {{isoDate}}
+  {{else}}
+    ## {{title}} - {{isoDate}}
+  {{/if}}
+
+  {{#each merges}}
+    - {{{message}}}{{#if href}} [`#{{id}}`]({{href}}){{/if}}
+  {{/each}}
+
+{{/each}}
