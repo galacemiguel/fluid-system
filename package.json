@@ -11,7 +11,8 @@
     "bundle": "rollup src/index.js --file lib/index.js --format umd --name 'fluidSystem'",
     "transpile": "babel lib/index.js -o lib/index.js",
     "package": "yarn bundle && yarn transpile",
-    "prepublish": "yarn test && yarn package"
+    "prepublish": "yarn test && yarn package",
+    "release": "release-it"
   },
   "keywords": [
     "fluid",

@@ -1,0 +1,11 @@
+{
+  "hooks": { "before:init": "yarn test" },
+  "git": {
+    "addUntrackedFiles": true,
+    "commit": true,
+    "tag": true,
+    "push": true
+  },
+  "github": { "release": false },
+  "npm": { "publish": true }
+}
