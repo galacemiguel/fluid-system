@@ -2,6 +2,17 @@
 
 <!-- auto-changelog-above -->
 
+## [v1.1.0](https://github.com/galacemiguel/fluid-system/compare/v1.0.13...v1.1.0) - 2021-08-22
+
+### Additions
+
+- Automate releases with [release-it](https://github.com/release-it/release-it)
+
+### Fixes
+
+- Bump ws from 7.4.4 to 7.4.6 ([`df2da2f`](https://github.com/galacemiguel/fluid-system/commit/df2da2f9564b5f095d08ec2af6e238d49c07354f))
+- Bump browserslist from 4.9.1 to 4.16.6 ([`5766541`](https://github.com/galacemiguel/fluid-system/commit/5766541912adfd8eff53f379e64b9d79d53da304))
+
 ## 1.0.12 - 2021/05/23
 
 - Upgrade vulnerable dependencies

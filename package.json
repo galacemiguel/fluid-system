@@ -1,7 +1,7 @@
 {
   "name": "fluid-system",
   "description": "Fluid System is a style props function transformer for generating fluid styles.",
-  "version": "1.0.12",
+  "version": "1.1.0",
   "main": "lib/index.js",
   "repository": "github:galacemiguel/fluid-system",
   "author": "Miguel N. Galace <galacemiguel@gmail.com> (https://galacemiguel.com)",
