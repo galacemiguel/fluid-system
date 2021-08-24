@@ -1,7 +1,7 @@
 {
   "hooks": {
     "before:init": "yarn test",
-    "after:bump": "yarn auto-changelog --starting-date 2021-08-23 --package --commit-limit false --template changelog-template.hbs"
+    "after:bump": "yarn auto-changelog --starting-date 2021-08-24 --package --commit-limit false --template changelog-template.hbs"
   },
   "git": {
     "changelog": null,
@@ -11,5 +11,8 @@
     "push": true
   },
   "github": { "release": false },
-  "npm": { "publish": true }
+  "npm": {
+    "publish": true,
+    "publishArgs": ["--registry=https://registry.npmjs.org"]
+  }
 }
