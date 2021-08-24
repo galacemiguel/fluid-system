@@ -1,6 +1,9 @@
 .eslintrc.json
+.github
+.release-it.json
 .travis.yml
 babel.config.js
+changelog-template.hbs
 coverage
 sandbox
 src
