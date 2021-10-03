@@ -1,12 +1,8 @@
 # Changelog
 
-## [v1.1.2](https://github.com/galacemiguel/fluid-system/compare/v1.1.1...v1.1.2) - 2021-08-24
+## 1.1.3 - 2021-10-03
 
-- Fix automated releases [`#20`](https://github.com/galacemiguel/fluid-system/pull/20)
-
-## [v1.1.1](https://github.com/galacemiguel/fluid-system/compare/v1.1.0...v1.1.1) - 2021-08-24
-
-- Bump path-parse from 1.0.6 to 1.0.7 [`#19`](https://github.com/galacemiguel/fluid-system/pull/19)
+- Bump tmpl from 1.0.4 to 1.0.5 [`#21`](https://github.com/galacemiguel/fluid-system/pull/21)
 
 <!-- auto-changelog-above -->
 
